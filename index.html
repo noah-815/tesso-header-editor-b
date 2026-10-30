@@ -76,8 +76,7 @@
   .dlg-head p { margin: 2px 0 0; font-size: 12.5px; color: var(--ui-sub); }
   .dlg-body { padding: 16px 24px 20px; max-height: 68vh; overflow-y: auto; }
   .set-group + .set-group { margin-top: 20px; }
-  .set-group h3 { margin: 0; font-size: 13px; font-weight: 600; }
-  .set-group p { margin: 2px 0 10px; font-size: 11.5px; color: var(--ui-sub); line-height: 1.5; }
+  .set-group h3 { margin: 0 0 10px; font-size: 13px; font-weight: 600; }
   .dlg-body .sets { grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .dlg-body .set { padding: 10px; border-radius: 10px; }
   .dlg-body .set-thumb { height: 72px; border-radius: 6px; padding: 0 10px; gap: 5px; align-items: flex-start; padding-top: 12px; }
@@ -92,7 +91,17 @@
   .dlg-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 24px 20px; }
 
 
-  .group { padding: 18px 20px; border-bottom: 1px solid var(--ui-line); }
+  .group { padding: 18px 20px; }
+  .group[hidden] { display: none; }
+  .color-tabs { position: sticky; top: 0; z-index: 6; display: grid; grid-template-columns: 1fr 1fr; background: var(--ui-panel); border-bottom: 1px solid var(--ui-line); }
+  .color-tabs button {
+    position: relative; height: 44px; padding: 0; border: 0; background: none; cursor: pointer;
+    font: 500 13px/1 Pretendard, sans-serif; color: var(--ui-sub);
+  }
+  .color-tabs button:hover { color: var(--ui-text); }
+  .color-tabs button[aria-selected="true"] { color: var(--ui-text); font-weight: 600; }
+  .color-tabs button[aria-selected="true"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--ui-text); }
+  .color-tabs button:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: -2px; border-radius: 4px; }
   .group-title {
     font-size: 12px; font-weight: 600; margin: 0 0 10px;
     display: flex; align-items: center; justify-content: space-between;
@@ -107,6 +116,7 @@
   }
   /* 미디어 위 컬러: one row per tone — 배경 · 전경 colour, 밝은/어두운 로고 */
   .logo-row { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; font-size: 12px; }
+  .logo-row > span { font-size: 12.5px; font-weight: 600; }
   .text-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
   .text-link:hover { color: var(--ui-text); }
   .tones { display: grid; grid-template-columns: 1fr 28px 28px auto; align-items: center; gap: 8px 10px; margin-top: 12px; }
@@ -172,8 +182,6 @@
   /* 겹쳤을 때 컬러: long labels size to their text and stay on one line */
   #onSeg button { flex: 1 1 auto; white-space: nowrap; padding: 7px 6px; gap: 4px; }
   .seg button[aria-pressed="true"] { background: #fff; color: var(--ui-text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
-  .chip { width: 14px; height: 14px; border-radius: 4px; border: 1px solid rgba(0,0,0,.12); flex: none; position: relative; overflow: hidden; background: var(--b); }
-  .chip::after { content: "A"; position: absolute; inset: 0; font: 600 9px/14px Inter, sans-serif; text-align: center; color: var(--c); }
 
   /* custom colour fields */
   .custom { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
@@ -232,40 +240,61 @@
   .cp-blur-row input[type="range"] { flex: 1; min-width: 0; accent-color: #1b4efe; }
   .cp-blur-row output { flex: none; width: 34px; text-align: right; font: 400 12px/18px Inter, sans-serif; color: #333e4c; }
   .cp-blur p { margin: 6px 0 0; font-size: 11px; line-height: 1.5; color: #99a0aa; }
-  .custom-actions { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 11.5px; color: var(--ui-sub); }
-  .link-btn {
-    border: 1px solid var(--ui-line); background: #fff; border-radius: 6px; padding: 4px 8px;
-    font: inherit; font-size: 11.5px; color: var(--ui-text); cursor: pointer;
-  }
-  .link-btn:hover { background: #f4f4f5; }
 
+  .group-divider { height: 1px; margin: 18px -20px 0; border: 0; background: var(--ui-line); }
   .group-desc { margin: 4px 0 12px; }
   .on-sub { margin: 18px 0 0; color: var(--ui-text); font-weight: 600; }
-  /* 헤더 · 메뉴 · 검색: one row each; a row outside the type's range is locked to the header */
+  /* 헤더 · 메뉴 · 검색: one row each; rows outside the type's range aren't shown */
   .surfaces { display: flex; flex-direction: column; gap: 8px; }
   .surface-row { display: flex; align-items: center; gap: 8px; min-height: 36px; }
   .surface-name { width: 34px; flex: none; font-size: 12.5px; font-weight: 600; }
-  .surface-row .chip { width: 30px; height: 30px; border-radius: 8px; }
-  .surface-row .chip::after { font-size: 13px; line-height: 30px; }
-  .surface-row select { flex: 1; min-width: 0; }
-  .surface-lock { display: none; flex: 1; align-items: center; gap: 5px; font-size: 12px; color: var(--ui-faint, #9ca3af); }
-  .surface-lock svg { width: 12px; height: 12px; }
-  .surface.is-locked .surface-name { color: var(--ui-sub); }
-  .surface.is-locked select { display: none; }
-  .surface.is-locked .surface-lock { display: flex; }
-  .surface.is-locked .chip { opacity: .55; }
-  .custom.is-scoped .cgroup, .custom.is-scoped .cdivider { display: none; }
-  .scope-note { margin-top: 10px; }
-  .cfield[hidden] { display: none; }
-  select.ui {
-    font: inherit; font-size: 12.5px; padding: 7px 30px 7px 10px; border-radius: 8px;
-    border: 1px solid var(--ui-line); background: #fff; color: var(--ui-text);
+  /* scheme picker: each option shows its colours — 배경, 글자, 호버 */
+  .aa {
+    position: relative; flex: none; width: 26px; height: 26px; border-radius: 6px; overflow: hidden;
+    display: flex; justify-content: center; background: var(--b); color: var(--c);
+    font: 600 11px/20px Inter, sans-serif; font-style: normal; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12);
   }
+  .aa::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 5px; height: 2px; border-radius: 1px; background: var(--u); }
+  .aa[hidden] { display: flex; visibility: hidden; } /* list: keeps the names aligned */
+  .scheme-btn .aa[hidden] { display: none; }
+  .scheme-btn:has(.aa[hidden]) { padding-left: 11px; }
+  .scheme-pick { position: relative; flex: 1; min-width: 0; }
+  .scheme-btn {
+    display: flex; align-items: center; gap: 8px; width: 100%; height: 38px; padding: 0 10px 0 6px; cursor: pointer;
+    border: 1px solid var(--ui-line); border-radius: 8px; background: #fff;
+    font: 500 12.5px/1 Pretendard, sans-serif; color: var(--ui-text);
+  }
+  .scheme-btn:hover { border-color: #c9ccd2; }
+  .scheme-btn:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: 1px; }
+  .scheme-btn[aria-expanded="true"] { border-color: var(--ui-accent); }
+  .scheme-btn b { flex: 1; min-width: 0; font-weight: 500; text-align: left; }
+  .scheme-btn svg { width: 14px; height: 14px; flex: none; color: var(--ui-sub); transition: transform .15s ease; }
+  .scheme-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .scheme-list {
+    position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 20; margin: 0; padding: 4px; list-style: none;
+    background: #fff; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.16), 0 0 0 1px rgba(0,0,0,.05);
+  }
+  .scheme-list[hidden] { display: none; }
+  .scheme-opt {
+    display: flex; align-items: center; gap: 8px; width: 100%; height: 36px; padding: 0 8px 0 4px; cursor: pointer;
+    border: 0; border-radius: 7px; background: none; text-align: left;
+    font: 500 12.5px/1 Pretendard, sans-serif; color: var(--ui-text);
+  }
+  .scheme-opt span { flex: 1; }
+  .scheme-opt:hover, .scheme-opt:focus-visible { background: #f6f7f9; outline: 0; }
+  .scheme-opt[aria-selected="true"] { background: #f1f2f4; }
+  .scheme-opt svg { width: 16px; height: 16px; flex: none; visibility: hidden; }
+  .scheme-opt[aria-selected="true"] svg { visibility: visible; }
+  .surface[hidden] { display: none; }
+  .custom.is-scoped .cgroup, .custom.is-scoped .cdivider { display: none; }
+  .split-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 28px; font-size: 12px; }
+  .split-row[hidden] { display: none; }
+  .cfield[hidden] { display: none; }
 
 
   /* ── Stage ─────────────────────────────────────── */
   .stage { position: relative; background: #eff1f4; padding: 32px; min-width: 0; min-height: 0; overflow: hidden; }
-  .stage-inner { display: flex; flex-direction: column; gap: 20px; margin: 0 auto; }
+  .stage-inner { display: flex; flex-direction: column; gap: 28px; margin: 0 auto; }
   .stage-tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   /* preview toolbar selects — Figma 180 × 42 dropdowns */
   .tool-select {
@@ -750,41 +779,36 @@
   <div class="depth is-hidden" id="depthColor">
   <div class="depth-head"><button type="button" class="back-btn" data-back aria-label="뒤로"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M9.80667 4.47333C10.0667 4.73333 10.0667 5.15333 9.80667 5.41333L7.22 8L9.80667 10.5867C10.0667 10.8467 10.0667 11.2667 9.80667 11.5267C9.54667 11.7867 9.12667 11.7867 8.86667 11.5267L5.80667 8.46667C5.54667 8.20667 5.54667 7.78667 5.80667 7.52667L8.86667 4.46667C9.12 4.21333 9.54667 4.21333 9.80667 4.47333Z"/></svg></button><h2>컬러</h2></div>
 
-  <section class="group">
-    <h2 class="group-title">기본 컬러</h2>
+  <div class="color-tabs" role="tablist" aria-label="컬러 구분">
+    <button type="button" role="tab" id="tabSolid" data-tab="solid" aria-controls="panelSolid" aria-selected="true">기본 컬러</button>
+    <button type="button" role="tab" id="tabMedia" data-tab="media" aria-controls="panelMedia" aria-selected="false">미디어 위 컬러</button>
+  </div>
+
+  <section class="group" id="panelSolid" role="tabpanel" aria-labelledby="tabSolid">
     <p class="hint group-desc" id="solidHint"></p>
     <div class="surfaces" id="surfaces"></div>
-    <p class="hint scope-note" id="scopeNote"></p>
+    <p class="hint">Color Scheme은 <a class="text-link" href="#" onclick="return false">사이트 스타일</a>에서 설정 가능해요.</p>
 
+    <hr class="group-divider">
     <div class="logo-row">
       <span id="solidLogoLabel">로고 컬러</span>
       <div class="seg logo-seg" id="solidLogo" role="group" aria-labelledby="solidLogoLabel">
         <button type="button" data-logo="light">밝은</button>
         <button type="button" data-logo="dark">어두운</button>
-        <button type="button" data-logo="auto">자동</button>
       </div>
     </div>
     <p class="hint">로고는 <a class="text-link" href="#" onclick="return false">브랜드 가이드</a>에서 설정 가능해요.</p>
   </section>
 
-  <section class="group" id="onCustomGroup">
-    <h2 class="group-title">미디어 위 컬러</h2>
+  <section class="group" id="panelMedia" role="tabpanel" aria-labelledby="tabMedia" hidden>
     <div id="onIntro">
       <p class="hint group-desc">헤더가 미디어 위에 겹쳐 있을 때 쓰는 컬러예요. 미디어의 밝기에 따라 어두운 · 밝은 미디어 위 컬러가 적용돼요.</p>
     </div>
     <div class="custom" id="onTonesB"></div>
-    <div class="logo-row" id="pageLogoRow">
-      <span id="pageLogoLabel">로고 컬러</span>
-      <div class="seg logo-seg" id="pageLogo" role="group" aria-labelledby="pageLogoLabel">
-        <button type="button" data-v="light">밝은</button>
-        <button type="button" data-v="dark">어두운</button>
-        <button type="button" data-v="auto">자동</button>
-      </div>
-    </div>
   </section>
 
-  <!-- shown while colours are being edited; stays at the bottom of the panel -->
-  <div class="auto-show is-hidden" id="autoShowWrap">
+  <!-- stays at the bottom of the panel -->
+  <div class="auto-show" id="autoShowWrap">
     <label for="autoShow">컬러 수정 중인 화면 자동 보기</label>
     <span class="switch"><input type="checkbox" id="autoShow" role="switch" checked aria-describedby="autoShowTip"><span></span></span>
     <div class="coach" id="autoShowTip" role="status" hidden>
@@ -807,7 +831,7 @@
       </label>
       <div class="tools-right">
       <div class="display-wrap" id="displayWrap">
-        <button type="button" class="tool-select tool-btn" id="displayBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="displayPop"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 4.66667C8.36667 4.66667 8.66667 4.96667 8.66667 5.33333V8C8.66667 8.36667 8.36667 8.66667 8 8.66667C7.63333 8.66667 7.33333 8.36667 7.33333 8V5.33333C7.33333 4.96667 7.63333 4.66667 8 4.66667ZM7.99333 1.33333C4.31333 1.33333 1.33333 4.32 1.33333 8C1.33333 11.68 4.31333 14.6667 7.99333 14.6667C11.68 14.6667 14.6667 11.68 14.6667 8C14.6667 4.32 11.68 1.33333 7.99333 1.33333ZM8 13.3333C5.05333 13.3333 2.66667 10.9467 2.66667 8C2.66667 5.05333 5.05333 2.66667 8 2.66667C10.9467 2.66667 13.3333 5.05333 13.3333 8C13.3333 10.9467 10.9467 13.3333 8 13.3333ZM8.66667 11.3333H7.33333V10H8.66667V11.3333Z"/></svg><span>헤더 표시</span><span class="ov-badge" id="displayBadge"><i></i><b></b></span><svg class="caret" viewBox="0 0 14 14" aria-hidden="true"><path fill="currentColor" d="M9.26333 5.41917L7 7.6825L4.73667 5.41917C4.50917 5.19167 4.14167 5.19167 3.91417 5.41917C3.68667 5.64667 3.68667 6.01417 3.91417 6.24167L6.59167 8.91917C6.81917 9.14667 7.18667 9.14667 7.41417 8.91917L10.0917 6.24167C10.3192 6.01417 10.3192 5.64667 10.0917 5.41917C9.86417 5.1975 9.49083 5.19167 9.26333 5.41917Z"/></svg></button>
+        <button type="button" class="tool-select tool-btn" id="displayBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="displayPop"><span>헤더 표시</span><span class="ov-badge" id="displayBadge"><i></i><b></b></span><svg class="caret" viewBox="0 0 14 14" aria-hidden="true"><path fill="currentColor" d="M9.26333 5.41917L7 7.6825L4.73667 5.41917C4.50917 5.19167 4.14167 5.19167 3.91417 5.41917C3.68667 5.64667 3.68667 6.01417 3.91417 6.24167L6.59167 8.91917C6.81917 9.14667 7.18667 9.14667 7.41417 8.91917L10.0917 6.24167C10.3192 6.01417 10.3192 5.64667 10.0917 5.41917C9.86417 5.1975 9.49083 5.19167 9.26333 5.41917Z"/></svg></button>
         <div class="pop" id="displayPop" role="dialog" aria-label="헤더 표시" hidden>
           <div class="pop-row">
             <div>
@@ -819,6 +843,7 @@
           <div class="pop-box" id="ovColors">
             <p class="pop-desc">배경에 맞는 컬러를 자동으로 적용하거나 직접 선택할 수 있어요.</p>
             <div class="pick-row"><span>일반 컬러</span><button type="button" class="pick" data-pick="on" aria-haspopup="listbox"><b></b><svg class="caret" viewBox="0 0 14 14" aria-hidden="true"><path fill="currentColor" d="M9.26333 5.41917L7 7.6825L4.73667 5.41917C4.50917 5.19167 4.14167 5.19167 3.91417 5.41917C3.68667 5.64667 3.68667 6.01417 3.91417 6.24167L6.59167 8.91917C6.81917 9.14667 7.18667 9.14667 7.41417 8.91917L10.0917 6.24167C10.3192 6.01417 10.3192 5.64667 10.0917 5.41917C9.86417 5.1975 9.49083 5.19167 9.26333 5.41917Z"/></svg></button></div>
+            <div class="pick-row"><span>로고 컬러</span><button type="button" class="pick" data-pick="logo" aria-haspopup="listbox"><b></b><svg class="caret" viewBox="0 0 14 14" aria-hidden="true"><path fill="currentColor" d="M9.26333 5.41917L7 7.6825L4.73667 5.41917C4.50917 5.19167 4.14167 5.19167 3.91417 5.41917C3.68667 5.64667 3.68667 6.01417 3.91417 6.24167L6.59167 8.91917C6.81917 9.14667 7.18667 9.14667 7.41417 8.91917L10.0917 6.24167C10.3192 6.01417 10.3192 5.64667 10.0917 5.41917C9.86417 5.1975 9.49083 5.19167 9.26333 5.41917Z"/></svg></button></div>
             <p class="pop-desc is-hidden" id="insetHint">Inset형 헤더는 데스크톱에서 항상 기본 컬러로 표시되고, 모바일에만 적용돼요.</p>
           </div>
           <ul class="pick-menu" id="pickMenu" role="listbox" hidden></ul>
@@ -971,34 +996,19 @@ const MOBILE_W = 390, MOBILE_H = 844;
 
 /* scope: which schemes the owner may set. 'header' — menu · search open attached to the header, so they follow it;
    'all' — they open as separate surfaces (drawer or full screen), so header · menu · search are each selectable.
-   panel: how menu · search open. Sets 04 · 10 have a chip background even when overlapped and are decided separately. */
+   panel: how menu · search open. */
 const SET_LABEL = { '05': '05/06', '08': '08/09' };
 const setLabel = n => SET_LABEL[n] || n;
-const ENABLED_SETS = ['05', '08', '11', '14'];
 const SET_INFO = {
-  '01': { scope: 'header', desc: '준비 중' },
-  '02': { scope: 'header', desc: '준비 중' },
-  '03': { scope: 'header', desc: '준비 중' },
   '05': { scope: 'header', desc: '풀폭 헤더 · 겹치기 지원', inset: false },
-  '07': { scope: 'header', desc: '준비 중' },
   '08': { scope: 'header', desc: 'Inset형 헤더 · 항상 solid', inset: true },
   '11': { scope: 'all', panel: 'drawer', desc: '메뉴·검색이 드로어로 열림' },
-  '12': { scope: 'all', panel: 'drawer', desc: '준비 중' },
-  '13': { scope: 'all', panel: 'drawer', desc: '준비 중' },
   '14': { scope: 'all', panel: 'full', desc: '메뉴·검색이 전체 화면으로 열림' },
-  '04': { scope: 'header', desc: '별도 검토' },
-  '10': { scope: 'header', desc: '별도 검토' },
 };
 const SET_GROUPS = [
-  { title: '헤더 컬러만 설정', desc: '메뉴·검색이 헤더에 붙어서 열려요. 색이 다르면 끊겨 보여서 헤더 컬러를 그대로 따라가요.', sets: ['01', '02', '03', '05', '07', '08'] },
-  { title: '헤더 · 메뉴 · 검색 각각 설정', desc: '메뉴·검색이 헤더와 떨어져 열려서 색을 각각 골라도 끊겨 보이지 않아요.', sets: ['11', '12', '13', '14'] },
-  { title: '별도 검토', desc: '겹쳐도 칩 바탕이 있어서 컬러 토큰을 따로 정해야 해요.', sets: ['04', '10'] },
+  { title: '헤더 컬러만 설정', sets: ['05'] },
+  { title: '헤더 · 메뉴 · 검색 각각 설정', sets: ['11', '14'] },
 ];
-const SCOPE_NOTE = {
-  header: '이 헤더는 메뉴·검색이 헤더에 붙어서 열려요. 색이 다르면 끊겨 보여서 헤더 컬러를 그대로 따라가요.',
-  drawer: '이 헤더는 메뉴·검색이 드로어로 떨어져 열려서, 색을 각각 골라도 끊겨 보이지 않아요.',
-  full: '이 헤더는 메뉴·검색이 화면 전체를 덮어서 헤더와 동시에 보이지 않아요. 열린 화면의 로고·유틸리티는 그 화면의 컬러를 따라가요.',
-};
 const SURFACES = [['header', '헤더'], ['menu', '메뉴'], ['search', '검색']];
 // roles each surface owns when it has its own scheme; 'header' alone owns them all
 const SURFACE_ROLES = {
@@ -1054,42 +1064,45 @@ const state = {
     'home-light': { overlap: true,  on: 'auto', logo: 'auto' },
     'sub':        { overlap: false, on: 'auto', logo: 'auto' },
   },
-  schemes: { header: 'base', menu: 'base', search: 'base' },
-  solidLogo: 'auto',       // 기본 컬러 로고: 'light' | 'dark' | 'auto' (from the background brightness)
+  schemes: { header: 'base', menu: 'same', search: 'same' }, // 'same': 헤더와 동일
+  split: false,    // 메뉴·검색 컬러 따로 설정 (types with scope 'all')
+  solidLogo: 'dark',       // 기본 컬러 로고: 'light' | 'dark'
   custom: { header: { ...SCHEMES.base }, menu: { ...SCHEMES.base }, search: { ...SCHEMES.base } },
   customEdited: { header: false, menu: false, search: false },
   onColors: { dark: { ...ON_PRESETS.dark }, light: { ...ON_PRESETS.light } }, // editable on dark / on light, shared by every page
-  onEdited: false, // user has started editing 미디어 위 컬러
   view: 'default', // 헤더 표시: default / hover / scroll / menu / search
   page: 'home-dark',
 };
 const isMulti = () => SET_INFO[state.set].scope === 'all';
 const panelType = () => SET_INFO[state.set].panel; // undefined: menu · search attached to the header
-const openSurfaces = () => isMulti() ? ['header', 'menu', 'search'] : ['header'];
+const isSplit = () => isMulti() && state.split;
+const openSurfaces = () => isSplit() ? ['header', 'menu', 'search'] : ['header'];
 const pageCfg = () => state.pages[state.page];
 const canOverlap = () => PAGES[state.page].fullBleed;
 const isOverlap = () => canOverlap() && pageCfg().overlap;
 const heroTone = () => PAGES[state.page].hero ? PAGES[state.page].hero.tone : 'dark';
 const onTone = () => pageCfg().on === 'auto' ? (PAGES[state.page].hero ? PAGES[state.page].hero.tone : 'dark') : pageCfg().on;
-// 자동 보기 is offered once colours are being customised: Custom scheme, or 미디어 위 컬러 touched
-const isCustomizing = () => openSurfaces().some(s => state.schemes[s] === 'custom') || state.onEdited;
 // 로고 컬러 (per page) overrides the tone's logo unless 자동
 const overlapLogo = () => pageCfg().logo !== 'auto' ? pageCfg().logo : state.onColors[onTone()].logo;
-// 자동: light logo on a dark background, dark logo on a light one (alpha ignored)
-const solidLogo = c => {
-  if (state.solidLogo !== 'auto') return state.solidLogo;
+// light logo on a dark background, dark logo on a light one (alpha ignored)
+const logoFor = c => {
   const { r, g, b } = hexToRgba(c.bg);
   return (0.299 * r + 0.587 * g + 0.114 * b) < 140 ? 'light' : 'dark';
 };
-const schemeOf = s => state.schemes[s] === 'custom' ? state.custom[s] : SCHEMES[state.schemes[s]];
-// surfaces outside the type's range follow the header
-const colors = (s = 'header') => schemeOf(isMulti() ? s : 'header');
-const logoHex = c => solidLogo(c) === 'light' ? '#ffffff' : '#1a1a1a';
+const schemeOf = s => {
+  const v = state.schemes[s];
+  return v === 'same' ? schemeOf('header') : v === 'custom' ? state.custom[s] : SCHEMES[v];
+};
+// surfaces that aren't set separately follow the header
+const colors = (s = 'header') => schemeOf(isSplit() ? s : 'header');
+const logoHex = v => v === 'light' ? '#ffffff' : '#1a1a1a';
 
 function tokenVars() {
   const c = colors(), m = colors('menu'), s = colors('search');
   return {
-    '--solid-logo': logoHex(c), '--menu-logo': logoHex(m), '--search-logo': logoHex(s),
+    '--solid-logo': logoHex(state.solidLogo),
+    // separately set surfaces carry the logo that reads on them
+    '--menu-logo': logoHex(isSplit() ? logoFor(m) : state.solidLogo), '--search-logo': logoHex(isSplit() ? logoFor(s) : state.solidLogo),
     '--solid-bg': c.bg, '--solid-nav': c.nav, '--solid-utility': c.utility, '--solid-nav-hover': c.hover,
     '--menu-bg': m.bg, '--menu-nav': m.nav, '--menu-nav-hover': m.hover, '--menu-secondary': m.secondary,
     '--search-bg': s.bg, '--search-line': s.sLine, '--search-line-active': s.sLineActive, '--search-placeholder': s.sPlaceholder,
@@ -1102,7 +1115,7 @@ function tokenVars() {
 
 const PAGES = {
   'home-dark':  { fullBleed: true,  hero: { src: 'assets/hero-dark.jpg',  tone: 'dark',  sub: 'Less, but better', title: 'Crafted for Better Experience' } },
-  'home-light': { fullBleed: true,  hero: { src: 'assets/hero-light.jpg', tone: 'light', sub: '', title: '' } },
+  'home-light': { fullBleed: true,  hero: { src: 'assets/hero-snow.jpg', tone: 'light', sub: '', title: '' } },
   'sub':        { fullBleed: false },
 };
 
@@ -1163,7 +1176,7 @@ function basePane(node, width, height) {
     },
     statusHTML(solid, reason) {
       if (!status) return;
-      const name = state.schemes.header;
+      const name = SCHEME_OPTIONS.find(([v]) => v === state.schemes.header)[1];
       status.innerHTML = solid
         ? `<b>header-solid</b> · ${name} <span style="opacity:.6">(${reason})</span>`
         : `<b>header-on-media</b> · on-${onTone()}${pageCfg().on === 'auto' ? ' · 자동' : ''} <span style="opacity:.6">(겹침 · default)</span>`;
@@ -1212,15 +1225,16 @@ function createDesktop() {
     viewReleased();
   }
   frame.addEventListener('pointerdown', clearForced, true);
-  hdr.addEventListener('mouseenter', () => { clearForced(); local.hovered = true; render(); });
-  hdr.addEventListener('mouseleave', () => { local.hovered = false; if (!panelType()) local.open = false; render(); });
+  // hovering must not drop the view being edited: it only ends once the colour picker is closed
+  hdr.addEventListener('mouseenter', () => { if (cp.el.hidden) clearForced(); local.hovered = true; render(); });
+  hdr.addEventListener('mouseleave', () => { local.hovered = false; if (!panelType() && !local.forced) local.open = false; render(); });
   hdr.querySelectorAll('.hdr-bar .hdr-item').forEach(item => {
     // while search is open, hovering nav items doesn't swap in the 2depth menu
-    item.addEventListener('mouseenter', () => { if (local.search || panelType()) return; local.open = item.hasAttribute('data-depth2'); render(); });
+    item.addEventListener('mouseenter', () => { if (local.search || local.forced || panelType()) return; local.open = item.hasAttribute('data-depth2'); render(); });
   });
   // leaving the bar for empty bar space (not the menu) closes 2depth
   hdr.querySelector('.hdr-bar').addEventListener('mousemove', e => {
-    if (!panelType() && local.open && !e.target.closest('.hdr-item')) { local.open = false; render(); }
+    if (!panelType() && !local.forced && local.open && !e.target.closest('.hdr-item')) { local.open = false; render(); }
   });
 
   // search: click to open/close, click dim or Esc to close
@@ -1373,7 +1387,15 @@ function viewReleased() {
 
 /* ── Editor controls ── */
 
-const LOCK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5 7V5a3 3 0 0 1 6 0v2h.5A1.5 1.5 0 0 1 13 8.5v5A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-5A1.5 1.5 0 0 1 4.5 7H5Zm1.5 0h3V5a1.5 1.5 0 0 0-3 0v2Z"/></svg>';
+const SCHEME_OPTIONS = [['base', 'Scheme 1'], ['muted', 'Scheme 2'], ['inverted', 'Scheme 3'], ['custom', 'Custom']];
+const CARET = '<svg viewBox="0 0 14 14" aria-hidden="true"><path fill="currentColor" d="M9.26333 5.41917L7 7.6825L4.73667 5.41917C4.50917 5.19167 4.14167 5.19167 3.91417 5.41917C3.68667 5.64667 3.68667 6.01417 3.91417 6.24167L6.59167 8.91917C6.81917 9.14667 7.18667 9.14667 7.41417 8.91917L10.0917 6.24167C10.3192 6.01417 10.3192 5.64667 10.0917 5.41917C9.86417 5.1975 9.49083 5.19167 9.26333 5.41917Z"/></svg>';
+const CHECK = '<svg viewBox="0 0 18 18" aria-hidden="true"><path fill="currentColor" d="M6.75 12.1275L4.1475 9.525C3.855 9.2325 3.3825 9.2325 3.09 9.525C2.7975 9.8175 2.7975 10.29 3.09 10.5825L6.225 13.7175C6.5175 14.01 6.99 14.01 7.2825 13.7175L15.2175 5.7825C15.51 5.49 15.51 5.0175 15.2175 4.725C14.925 4.4325 14.4525 4.4325 14.16 4.725L6.75 12.1275Z"/></svg>';
+const SAME_OPTION = [['same', '헤더와 동일']];
+const SPLIT_ROW = `<div class="split-row" id="splitRow">
+    <label for="split">메뉴·검색 컬러 따로 설정</label>
+    <span class="switch"><input type="checkbox" id="split" role="switch"><span></span></span>
+  </div>`;
+const paintAa = (el, c) => { el.style.cssText = `--b:${c.bg};--c:${c.nav};--u:${c.hover}`; };
 const roleField = (s, r) => `<div class="cfield" data-key="${r.key}">
     <button type="button" class="swatch checker" id="sw-${s}-${r.key}" aria-haspopup="dialog" aria-expanded="false" aria-label="${r.label} 색상 선택"><i></i></button>
     <label for="sw-${s}-${r.key}">${r.label}${r.key === 'bg' ? '<span class="tag" hidden></span>' : ''}</label>
@@ -1381,27 +1403,19 @@ const roleField = (s, r) => `<div class="cfield" data-key="${r.key}">
 const surfaceFields = s => s === 'header'
   ? ROLES.map((r, i) => r.group ? `${i ? '<hr class="cdivider">' : ''}<p class="cgroup">${r.group}</p>` : roleField(s, r)).join('')
   : ROLES.filter(r => SURFACE_ROLES[s].includes(r.key)).map(r => roleField(s, r)).join('');
-document.getElementById('surfaces').innerHTML = SURFACES.map(([s, label]) => `
+document.getElementById('surfaces').innerHTML = SURFACES.map(([s, label]) => `${s === 'menu' ? SPLIT_ROW : ''}
   <div class="surface" data-surface="${s}">
     <div class="surface-row">
       <span class="surface-name">${label}</span>
-      <i class="chip"></i>
-      <select class="ui" autocomplete="off" aria-label="${label} 컬러">
-        <option value="base">Base</option>
-        <option value="muted">Muted</option>
-        <option value="inverted">Inverted</option>
-        <option value="custom">Custom</option>
-      </select>
-      <span class="surface-lock">${LOCK}헤더와 동일</span>
+      <div class="scheme-pick">
+        <button type="button" class="scheme-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="${label} 컬러"><i class="aa">Aa</i><b></b>${CARET}</button>
+        <ul class="scheme-list" role="listbox" aria-label="${label} 컬러" hidden>${[...(s === 'header' ? [] : SAME_OPTION), ...SCHEME_OPTIONS].map(([v, name]) => `
+          <li role="presentation"><button type="button" class="scheme-opt" role="option" data-scheme="${v}" aria-selected="false"><i class="aa"${v === 'custom' ? ' hidden' : ''}>Aa</i><span>${name}</span>${CHECK}</button></li>`).join('')}
+        </ul>
+      </div>
     </div>
     <div class="custom is-hidden">
       ${surfaceFields(s)}
-      <div class="custom-actions">
-        <span>불러오기</span>
-        <button type="button" class="link-btn" data-load="base">Base</button>
-        <button type="button" class="link-btn" data-load="muted">Muted</button>
-        <button type="button" class="link-btn" data-load="inverted">Inverted</button>
-      </div>
     </div>
   </div>`).join('');
 document.getElementById('onTonesB').innerHTML = ['dark', 'light'].map((tone, i) =>
@@ -1410,19 +1424,10 @@ document.getElementById('onTonesB').innerHTML = ['dark', 'light'].map((tone, i) 
     <button type="button" class="swatch checker" id="swB-${tone}-${key}" data-tone="${tone}" data-on-key="${key}" aria-haspopup="dialog" aria-expanded="false"><i></i></button>
     <label for="swB-${tone}-${key}">${label}</label>
   </div>`).join('')).join('');
-// announce the toggle the first time Custom is chosen
+// announce the toggle each time the 컬러 menu is opened
 const coach = document.getElementById('autoShowTip');
-let coachSeen = false;
-try { coachSeen = localStorage.getItem('hdr-editor-autoshow-tip') === '1'; } catch (e) {}
-function dismissCoach() {
-  if (coach.hidden) return;
-  coach.hidden = true; coachSeen = true;
-  try { localStorage.setItem('hdr-editor-autoshow-tip', '1'); } catch (e) {}
-}
-function maybeShowCoach() {
-  if (coachSeen || !isCustomizing()) return;
-  coach.hidden = false;
-}
+const dismissCoach = () => { coach.hidden = true; };
+const showCoach = () => { coach.hidden = false; };
 coach.querySelector('.coach-close').addEventListener('click', dismissCoach);
 document.getElementById('autoShow').addEventListener('change', dismissCoach);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') dismissCoach(); });
@@ -1430,9 +1435,10 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') dismissCoach
 function autoShow(key, surface = 'header') {
   if (!document.getElementById('autoShow').checked) return;
   if (key === 'dark' || key === 'light') showTone(key);
-  else if (isMulti() && surface === 'header') setView('scroll'); // the header's own colours show on the solid bar
-  else if (isMulti() && surface === 'menu') setView('menu', { hoverMark: key === 'hover' });
-  else if (isMulti() && surface === 'search') setView('search', { emptySearch: needsEmptySearch(key), resultHover: key === 'sResultHover' });
+  // the header's own colours show on the solid bar; a drawer or full screen would cover it
+  else if (surface === 'header' && (isSplit() || (panelType() && key === 'bg'))) setView('scroll');
+  else if (isSplit() && surface === 'menu') setView('menu', { hoverMark: key === 'hover' });
+  else if (isSplit() && surface === 'search') setView('search', { emptySearch: needsEmptySearch(key), resultHover: key === 'sResultHover' });
   else if (isSearchKey(key)) setView('search', { emptySearch: needsEmptySearch(key), resultHover: key === 'sResultHover' });
   else setView('menu', { hoverMark: key === 'hover', depth2: key === 'secondary' });
 }
@@ -1491,11 +1497,6 @@ function cpCommit(skip) {
   markEdited();
   cpPaint(skip); syncCustom(); renderAll(); syncEditor();
 }
-function markOnEdited() {
-  if (state.onEdited) return;
-  state.onEdited = true;
-  syncEditor(); maybeShowCoach();
-}
 const markEdited = () => { if (cp.surface) state.customEdited[cp.surface] = true; };
 function openPicker(key, btn, obj, surface = null) {
   if (cp.key === key && cp.obj === obj && !cp.el.hidden) return closePicker();
@@ -1510,7 +1511,6 @@ function openPicker(key, btn, obj, surface = null) {
   const r = btn.getBoundingClientRect(), h = cp.el.offsetHeight;
   cp.el.style.left = (document.querySelector('.editor').getBoundingClientRect().right + 8) + 'px';
   cp.el.style.top = clamp(r.top - 12, 8, innerHeight - h - 8) + 'px';
-  if (!surface) markOnEdited();
   autoShow(surface ? key : (obj === state.onColors.dark ? 'dark' : 'light'), surface);
 }
 function closePicker() {
@@ -1567,23 +1567,56 @@ document.querySelectorAll('[data-on-key]').forEach(btn => {
   btn.addEventListener('click', () => openPicker(btn.dataset.onKey, btn, state.onColors[btn.dataset.tone]));
 });
 const surfacesEl = document.getElementById('surfaces');
+function setScheme(s, v) {
+  // Custom starts from the scheme you were on, until you edit it
+  if (v === 'custom' && state.schemes[s] !== 'custom' && !state.customEdited[s]) state.custom[s] = { ...schemeOf(s) };
+  state.schemes[s] = v;
+  if (s === 'header') state.solidLogo = logoFor(schemeOf('header')); // keep the logo visible on the new background
+  closePicker();
+  syncCustom(); renderAll(); syncEditor();
+  autoShow('bg', s);
+}
+function closeSchemeLists(except) {
+  surfacesEl.querySelectorAll('.scheme-pick').forEach(p => {
+    if (p === except) return;
+    p.querySelector('.scheme-list').hidden = true;
+    p.querySelector('.scheme-btn').setAttribute('aria-expanded', 'false');
+  });
+}
 surfacesEl.addEventListener('click', e => {
   const s = e.target.closest('.surface')?.dataset.surface;
   const sw = e.target.closest('.swatch');
   if (sw) { openPicker(sw.closest('.cfield').dataset.key, sw, state.custom[s], s); return; }
-  const load = e.target.closest('[data-load]');
-  if (load) { state.custom[s] = { ...SCHEMES[load.dataset.load] }; syncCustom(); renderAll(); syncEditor(); }
+  const btn = e.target.closest('.scheme-btn');
+  if (btn) {
+    const pick = btn.parentElement, list = pick.querySelector('.scheme-list'), open = list.hidden;
+    closePicker(); closeSchemeLists(pick);
+    list.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    if (open) (list.querySelector('[aria-selected="true"]')).focus();
+    return;
+  }
+  const opt = e.target.closest('.scheme-opt');
+  if (opt) { closeSchemeLists(); setScheme(s, opt.dataset.scheme); opt.closest('.scheme-pick').querySelector('.scheme-btn').focus(); }
+});
+surfacesEl.addEventListener('keydown', e => {
+  const opt = e.target.closest('.scheme-opt');
+  if (!opt) return;
+  const opts = [...opt.closest('.scheme-list').querySelectorAll('.scheme-opt')], i = opts.indexOf(opt);
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    opts[(i + (e.key === 'ArrowDown' ? 1 : -1) + opts.length) % opts.length].focus();
+  } else if (e.key === 'Escape') {
+    closeSchemeLists(); opt.closest('.scheme-pick').querySelector('.scheme-btn').focus();
+  }
 });
 surfacesEl.addEventListener('change', e => {
-  const s = e.target.closest('.surface').dataset.surface, v = e.target.value;
-  // Custom starts from the scheme you were on, until you edit it
-  if (v === 'custom' && state.schemes[s] !== 'custom' && !state.customEdited[s]) state.custom[s] = { ...SCHEMES[state.schemes[s]] };
-  state.schemes[s] = v;
-  closePicker();
+  if (e.target.id !== 'split') return;
+  state.split = e.target.checked; // values stay, so turning it back on restores them
+  closePicker(); closeSchemeLists();
   syncCustom(); renderAll(); syncEditor();
-  if (isMulti()) autoShow('bg', s);
-  maybeShowCoach();
 });
+document.addEventListener('pointerdown', e => { if (!e.target.closest('.scheme-pick')) closeSchemeLists(); });
 
 function syncCustom() {
   for (const [s] of SURFACES) {
@@ -1601,7 +1634,6 @@ function syncCustom() {
       bg.classList.toggle('has-blur', !!oc.blurOn);
       bg.title = oc.blurOn ? `블러 ${oc.blur}px` : '';
     });
-    document.querySelectorAll(`[data-tone-chip="${tone}"]`).forEach(ch => ch.style.setProperty('--c', oc.fg));
   }
 }
 
@@ -1610,29 +1642,32 @@ function syncEditor() {
   const inset = SET_INFO[state.set].inset;
   syncDisplay();
 
-  const multi = isMulti();
+  const split = isSplit();
+  document.getElementById('splitRow').hidden = !isMulti();
+  document.getElementById('split').checked = state.split;
   for (const [s] of SURFACES) {
     const el = surfacesEl.querySelector(`[data-surface="${s}"]`), open = openSurfaces().includes(s), c = colors(s);
-    el.classList.toggle('is-locked', !open);
-    el.querySelector('select').value = state.schemes[s];
-    el.querySelector('.chip').style.cssText = `--b:${c.bg};--c:${c.nav}`;
+    el.hidden = !open;
+    el.querySelector('.scheme-btn b').textContent = [...SAME_OPTION, ...SCHEME_OPTIONS].find(([v]) => v === state.schemes[s])[1];
+    paintAa(el.querySelector('.scheme-btn .aa'), c);
+    el.querySelector('.scheme-btn .aa').hidden = state.schemes[s] === 'custom';
+    el.querySelectorAll('.scheme-opt').forEach(o => {
+      const v = o.dataset.scheme;
+      o.setAttribute('aria-selected', String(v === state.schemes[s]));
+      if (v !== 'custom') paintAa(o.querySelector('.aa'), v === 'same' ? schemeOf('header') : SCHEMES[v]);
+    });
     el.querySelector('.custom').classList.toggle('is-hidden', !open || state.schemes[s] !== 'custom');
     // on its own the header edits every role; with separate surfaces only its own
-    el.querySelector('.custom').classList.toggle('is-scoped', multi);
-    el.querySelectorAll('.cfield').forEach(row => { row.hidden = multi && !SURFACE_ROLES[s].includes(row.dataset.key); });
+    el.querySelector('.custom').classList.toggle('is-scoped', split);
+    el.querySelectorAll('.cfield').forEach(row => { row.hidden = split && !SURFACE_ROLES[s].includes(row.dataset.key); });
   }
-  document.getElementById('scopeNote').textContent = SCOPE_NOTE[panelType() || 'header'];
   document.querySelectorAll('#solidLogo button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.logo === state.solidLogo)));
-  document.getElementById('autoShowWrap').classList.toggle('is-hidden', !isCustomizing());
-  document.querySelectorAll('#pageLogo button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === pageCfg().logo)));
-  document.getElementById('solidHint').textContent = multi
-    ? '헤더, 메뉴, 검색의 컬러를 각각 정해요. 헤더 컬러는 미디어 위에 겹치지 않을 때와 호버·스크롤 시 적용돼요.'
-    : inset
+  document.getElementById('solidHint').textContent = inset
     ? '헤더의 기본 컬러예요. 데스크톱은 헤더와 2depth 메뉴에 항상, 모바일은 겹치지 않을 때·스크롤·메뉴를 열었을 때 적용돼요.'
-    : '헤더의 기본 컬러예요. 미디어 위에 겹치지 않을 때와 호버·스크롤 시, 2depth·검색·모바일 메뉴에 적용돼요.';
+    : '헤더의 기본 컬러예요. 헤더를 미디어 위에 겹치지 않을 때와 호버·스크롤 시 적용돼요.';
 }
 
-const thumbInner = n => `<i></i><i></i>${n === '04' ? '' : '<b></b>'}<i class="r"></i>`;
+const thumbInner = () => `<i></i><i></i><b></b><i class="r"></i>`;
 const thumbHTML = n => n === '08'
   ? `<div class="set-thumb inset"><div>${thumbInner(n)}</div></div>`
   : `<div class="set-thumb">${thumbInner(n)}${SET_INFO[n].panel ? `<em class="${SET_INFO[n].panel}"></em>` : ''}</div>`;
@@ -1641,14 +1676,14 @@ const dialog = document.getElementById('designDialog');
 const setsEl = document.getElementById('sets');
 let pendingSet = state.set;
 const setBtn = n => `
-  <button type="button" class="set" data-set="${n}" aria-pressed="false" ${ENABLED_SETS.includes(n) ? '' : 'disabled'}>
+  <button type="button" class="set" data-set="${n}" aria-pressed="false">
     ${thumbHTML(n)}
     <span>set ${setLabel(n)}</span>
     <small>${SET_INFO[n].desc}</small>
   </button>`;
 setsEl.innerHTML = SET_GROUPS.map(g => `
   <section class="set-group">
-    <h3>${g.title}</h3><p>${g.desc}</p>
+    <h3>${g.title}</h3>
     <div class="sets">${g.sets.map(setBtn).join('')}</div>
   </section>`).join('');
 const syncPending = () => {
@@ -1677,14 +1712,6 @@ dialog.addEventListener('close', () => {
 // backdrop click closes without applying
 dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close('cancel'); });
 
-// 로고 컬러 (per page): 자동 follows the tone — 밝은 로고 on dark, 어두운 로고 on light
-document.getElementById('pageLogo').addEventListener('click', e => {
-  const b = e.target.closest('button');
-  if (!b) return;
-  pageCfg().logo = b.dataset.v;
-  closePicker(); syncEditor(); renderAll(); markOnEdited();
-  if (document.getElementById('autoShow').checked && isOverlap()) setView('default');
-});
 document.getElementById('solidLogo').addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
@@ -1714,6 +1741,7 @@ function showTone(tone) {
 /* ── 헤더 표시: per-page overlap, only offered when the page starts with a full-bleed section ── */
 const PICKS = {
   on:   [['auto', '자동'], ['dark', '어두운 미디어 위'], ['light', '밝은 미디어 위']],
+  logo: [['auto', '자동'], ['light', '밝은'], ['dark', '어두운']], // 자동 follows the tone: 밝은 on dark, 어두운 on light
 };
 const displayWrap = document.getElementById('displayWrap');
 const displayBtn = document.getElementById('displayBtn');
@@ -1757,7 +1785,7 @@ document.querySelectorAll('.pick').forEach(b => b.addEventListener('click', e =>
   // drop the list just under the trigger, right-aligned to it
   const pr = displayPop.getBoundingClientRect(), br = b.getBoundingClientRect();
   pickMenu.style.top = (br.bottom - pr.top + 4) + 'px';
-  pickMenu.style.left = (br.right - pr.left - 284) + 'px';
+  pickMenu.style.right = (pr.right - br.right) + 'px';
   pickMenu.hidden = false;
 }));
 pickMenu.addEventListener('click', e => {
@@ -1766,6 +1794,7 @@ pickMenu.addEventListener('click', e => {
   if (openPick === 'on') { closePick(); setOn(li.dataset.v); return; }
   pageCfg()[openPick] = li.dataset.v;
   closePick(); syncDisplay(); renderAll();
+  if (isOverlap()) setView('default'); // the on-media logo shows on the first screen
 });
 document.addEventListener('pointerdown', e => {
   if (displayPop.hidden) return;
@@ -1782,6 +1811,30 @@ document.getElementById('page').addEventListener('change', e => {
   setPageAll();
 });
 
+/* ── 컬러 tabs: 기본 컬러 · 미디어 위 컬러 ── */
+const colorTabs = [...document.querySelectorAll('.color-tabs button')];
+function setColorTab(btn) {
+  closePicker();
+  for (const b of colorTabs) {
+    const on = b === btn;
+    b.setAttribute('aria-selected', String(on));
+    b.tabIndex = on ? 0 : -1;
+    document.getElementById(b.getAttribute('aria-controls')).hidden = !on;
+  }
+  document.querySelector('.editor').scrollTop = 0;
+  // on-media colours show on the untouched first screen, not over an open menu or search
+  if (btn.dataset.tab === 'media' && document.getElementById('autoShow').checked && isOverlap()) setView('default');
+}
+colorTabs.forEach((b, i) => {
+  b.tabIndex = i ? -1 : 0;
+  b.addEventListener('click', () => setColorTab(b));
+  b.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const next = colorTabs[(i + 1) % colorTabs.length];
+    setColorTab(next); next.focus();
+  });
+});
+
 /* ── Editor depths: menu list → 컬러 (others are placeholders) ── */
 function openDepth(id, title) {
   document.querySelectorAll('.editor .depth').forEach(d => d.classList.toggle('is-hidden', d.id !== id));
@@ -1790,7 +1843,7 @@ function openDepth(id, title) {
   document.querySelector('.editor').scrollTop = 0;
 }
 document.querySelectorAll('.menu-item').forEach(b => b.addEventListener('click', () => {
-  if (b.dataset.depth === 'color') openDepth('depthColor');
+  if (b.dataset.depth === 'color') { openDepth('depthColor'); showCoach(); }
   else openDepth('depthOther', b.querySelector('span').textContent);
 }));
 document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => {
